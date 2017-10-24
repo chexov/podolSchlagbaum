@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.content.Intent.ACTION_CALL;
@@ -26,6 +29,7 @@ public class ScrollingActivity extends AppCompatActivity {
     static final String BAUM_NUMBER = "+380671733978";
 
     static boolean needToCallback = true;
+    protected TextToSpeech ttobj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +40,20 @@ public class ScrollingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         logTextView = findViewById(R.id.textlog);
 
-
         final MyBroadcastReceiver br = new MyBroadcastReceiver(this);
         IntentFilter filter = new IntentFilter(READ_PHONE_STATE);
         filter.addAction("android.intent.action.PHONE_STATE");
         this.registerReceiver(br, filter);
 
+        ttobj = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    ttobj.setLanguage(Locale.GERMAN);
+                    ttobj.speak("Guten tag.", TextToSpeech.QUEUE_FLUSH, null);
+                }
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +69,13 @@ public class ScrollingActivity extends AppCompatActivity {
         if (!needToCallback) {
             Log.d("main", "Already called but requested");
             return;
+        }
+
+        try {
+            ttobj.speak("telefonieren SchlagBaum.", TextToSpeech.QUEUE_FLUSH, null);
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         boolean canCall = ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PERMISSION_GRANTED;
