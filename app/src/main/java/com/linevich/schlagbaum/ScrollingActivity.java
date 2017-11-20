@@ -51,6 +51,8 @@ public class ScrollingActivity extends AppCompatActivity {
                 if (status != TextToSpeech.ERROR) {
                     ttobj.setLanguage(Locale.GERMAN);
                     ttobj.speak("Guten tag.", TextToSpeech.QUEUE_FLUSH, null);
+//                    ttobj.setLanguage(Locale.UK);
+//                    ttobj.speak("Good day.", TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         });
@@ -72,7 +74,8 @@ public class ScrollingActivity extends AppCompatActivity {
         }
 
         try {
-            ttobj.speak("telefonieren SchlagBaum.", TextToSpeech.QUEUE_FLUSH, null);
+            ttobj.speak("Nach schlagbaum telefonieren.", TextToSpeech.QUEUE_FLUSH, null);
+//            ttobj.speak("Calling the gate.", TextToSpeech.QUEUE_FLUSH, null);
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
